@@ -12,6 +12,8 @@ const connection = {
 const dbConfig = {
   connection,
   client: process.env.DB_CLIENT,
+  migrations: { stub: "./stubs/migration.stub" },
+  seeds: { stub: "./stubs/seed.stub" },
 };
 
 module.exports = dbConfig;
