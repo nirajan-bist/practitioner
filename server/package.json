@@ -9,6 +9,19 @@
   "dependencies": {
     "express": "^4.18.1",
     "knex": "^2.3.0",
+    "nodemon": "^2.0.20",
     "pg": "^8.8.0"
+  },
+  "scripts": {
+    "start:dev": "nodemon --watch .env --watch ./src --exec babel-node src/index.js"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.18.10",
+    "@babel/core": "^7.19.1",
+    "@babel/node": "^7.19.1",
+    "@babel/preset-env": "^7.19.1"
+  },
+  "engines": {
+    "node": ">= 12.22.12"
   }
 }
