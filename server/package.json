@@ -14,7 +14,7 @@
     "pg": "^8.8.0"
   },
   "scripts": {
-    "start:dev": "nodemon --watch .env --watch ./src --exec babel-node src/index.js"
+    "start:dev": "nodemon --watch .env --watch src --exec babel-node src --source-maps"
   },
   "devDependencies": {
     "@babel/cli": "^7.18.10",
