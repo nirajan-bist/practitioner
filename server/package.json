@@ -14,7 +14,12 @@
     "pg": "^8.8.0"
   },
   "scripts": {
-    "start:dev": "nodemon --watch .env --watch src --exec babel-node src --source-maps"
+    "start:dev": "nodemon --watch .env --watch src --exec babel-node src --source-maps",
+    "make:migration":"yarn knex migrate:make --knexfile src/knexfile.js", 
+    "migrate":"yarn knex migrate:latest --knexfile src/knexfile.js",
+    "rollback":"yarn knex migrate:rollback --knexfile src/knexfile.js",
+    "make:seed":"yarn knex seed:make --knexfile src/knexfile.js",
+    "seed":"yarn knex seed:run --knexfile src/knexfile.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.18.10",
