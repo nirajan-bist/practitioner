@@ -15,19 +15,34 @@
   },
   "scripts": {
     "start:dev": "nodemon --watch .env --watch src --exec babel-node src --source-maps",
-    "make:migration":"yarn knex migrate:make --knexfile src/knexfile.js", 
-    "migrate":"yarn knex migrate:latest --knexfile src/knexfile.js",
-    "rollback":"yarn knex migrate:rollback --knexfile src/knexfile.js",
-    "make:seed":"yarn knex seed:make --knexfile src/knexfile.js",
-    "seed":"yarn knex seed:run --knexfile src/knexfile.js"
+    "make:migration": "yarn knex migrate:make --knexfile src/knexfile.js",
+    "migrate": "yarn knex migrate:latest --knexfile src/knexfile.js",
+    "rollback": "yarn knex migrate:rollback --knexfile src/knexfile.js",
+    "make:seed": "yarn knex seed:make --knexfile src/knexfile.js",
+    "seed": "yarn knex seed:run --knexfile src/knexfile.js",
+    "lint": "prettier --check .",
+    "format": "prettier --write ."
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js, json}": [
+      "prettier --write"
+    ]
   },
   "devDependencies": {
     "@babel/cli": "^7.18.10",
     "@babel/core": "^7.19.1",
     "@babel/node": "^7.19.1",
-    "@babel/preset-env": "^7.19.1"
+    "@babel/preset-env": "^7.19.1",
+    "husky": "4.2.5",
+    "lint-staged": "^13.0.3",
+    "prettier": "2.7.1"
   },
   "engines": {
-    "node": ">= 12.22.12"
+    "node": ">= 14.10.0"
   }
 }
