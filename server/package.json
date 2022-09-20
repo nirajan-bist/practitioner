@@ -19,21 +19,28 @@
     "migrate": "yarn knex migrate:latest --knexfile src/knexfile.js",
     "rollback": "yarn knex migrate:rollback --knexfile src/knexfile.js",
     "make:seed": "yarn knex seed:make --knexfile src/knexfile.js",
-    "seed": "yarn knex seed:run --knexfile src/knexfile.js"
+    "seed": "yarn knex seed:run --knexfile src/knexfile.js",
+    "lint": "prettier --check .",
+    "format": "prettier --write ."
   },
-  "husky":{
-    "hooks":{
-      "pre-commit":"echo 'hi' "
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged":{
+    "*.js":"prettier --write"
   },
   "devDependencies": {
     "@babel/cli": "^7.18.10",
     "@babel/core": "^7.19.1",
     "@babel/node": "^7.19.1",
     "@babel/preset-env": "^7.19.1",
-    "husky": "^8.0.1"
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "prettier": "2.7.1"
   },
   "engines": {
-    "node": ">= 16.10.0"
+    "node": ">= 14.10.0"
   }
 }
