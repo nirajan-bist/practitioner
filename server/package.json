@@ -38,6 +38,7 @@
     "@babel/core": "^7.19.1",
     "@babel/node": "^7.19.1",
     "@babel/preset-env": "^7.19.1",
+    "basetag": "^2.1.0",
     "husky": "4.2.5",
     "lint-staged": "^13.0.3",
     "prettier": "2.7.1"
