@@ -1,4 +1,4 @@
-import "./env";
+import "$/src/env";
 
 // Imports
 import express from "express";
