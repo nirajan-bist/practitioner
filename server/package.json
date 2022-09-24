@@ -21,7 +21,8 @@
     "make:seed": "yarn knex seed:make --knexfile src/knexfile.js",
     "seed": "yarn knex seed:run --knexfile src/knexfile.js",
     "lint": "prettier --check .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "postinstall": "basetag link --hook"
   },
   "husky": {
     "hooks": {
