@@ -1,0 +1,4 @@
+- TODO: Create modal for user, practitioner
+- TODO: Auth middleware
+- TODO: Error middleware
+- TODO: Joi validators
