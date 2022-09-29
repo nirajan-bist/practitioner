@@ -1,4 +1,10 @@
-- TODO: Create modal for user, practitioner
 - TODO: Auth middleware
 - TODO: Error middleware
 - TODO: Joi validators
+- TODO: React inital setup
+- TODO: React router setup
+- TODO: Redux setup
+- TODO: Axios and interceports
+- TODO: Toast and bootstrap setup
+- TODO: Design sigin and signup page
+- TODO: Design Dashboard page
