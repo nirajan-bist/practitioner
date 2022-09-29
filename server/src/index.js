@@ -10,9 +10,9 @@ const logger = createLogger("index");
 
 // Initialization
 const app = express();
-app.use(morgan("tiny", { stream: writeStream }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan("tiny", { stream: writeStream }));
 
 const PORT = process.env.NODE_PORT;
 
