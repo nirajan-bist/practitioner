@@ -7,9 +7,11 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "camelcase-keys": "6.2.2",
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
     "knex": "^2.3.0",
+    "lodash": "^4.17.21",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.20",
     "pg": "^8.8.0",
