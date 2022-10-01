@@ -1,5 +1,4 @@
 - TODO: ICU Specialist column add
-- TODO: Joi validators
 - TODO: Error middleware
 - TODO: React inital setup
 - TODO: React router setup
