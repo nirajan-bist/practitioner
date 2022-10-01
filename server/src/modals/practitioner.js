@@ -6,7 +6,7 @@ const qb = () => db(TABLE_NAME);
 
 /**
  * Fetches all practitioners.
- * @returns {Array} [object]
+ * @returns {Promise} [object]
  */
 export function fetchAll() {
   return qb().select("*");
@@ -14,7 +14,7 @@ export function fetchAll() {
 /**
  * Fetches a practitioner by id.
  * @param {Number} id
- * @returns {Object}
+ * @returns {Promise}
  */
 export function fetchById(id) {
   return qb().select("*").where("id", id);
@@ -22,7 +22,7 @@ export function fetchById(id) {
 /**
  * Inserts a new practitioner.
  * @param {Object} data
- * @returns {Object}
+ * @returns {Promise}
  */
 export function insert(data) {
   return qb().returning("*").insert(data);
@@ -30,7 +30,7 @@ export function insert(data) {
 /**
  * Deletes a practitioner by id.
  * @param {Number} id
- * @returns {Object}
+ * @returns {Promise}
  */
 export function deleteById(id) {
   return qb().returning("*").del().where("id", id);
@@ -39,7 +39,7 @@ export function deleteById(id) {
  * Updates a practitioner by id.
  * @param {Number} id
  * @param {Object} data
- * @returns {Object}
+ * @returns {Promise}
  */
 export function updateById(id, data) {
   return qb().returning("*").where("id", id).update(data);
