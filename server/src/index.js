@@ -33,7 +33,7 @@ app.use((err, req, res, next) => {
 
   //Server Error
   logger.error(err.stack);
-  res.status(500).send({ msg: "Server Error Occured!", stack: err.stack });
+  res.status(500).send({ message: "Server Error Occured!", stack: err.stack });
 });
 
 // Listen to the port

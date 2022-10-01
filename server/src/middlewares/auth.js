@@ -22,9 +22,7 @@ function getPayloadFromToken(token, tokenType = TOKEN_TYPES.ACCESS_TOKEN) {
  */
 export async function authenticateRequest(req, res, next) {
   try {
-    const {
-      headers: { authorization = "" },
-    } = req;
+    const authorization = req.headers.authorization || "";
 
     if (!authorization) {
       return next(new Error("No Authorization Token"));
