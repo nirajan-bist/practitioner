@@ -4,6 +4,7 @@ import "./env";
 import express from "express";
 import morgan from "morgan";
 import routes from "./routes";
+import { authenticateRequest } from "./middlewares/auth";
 
 import createLogger, { writeStream } from "./utils/logger";
 const logger = createLogger("index");
@@ -21,7 +22,7 @@ app.get("/api", (req, res) => {
 });
 
 app.use("/", routes.userRoutes);
-app.use("/practitioner", routes.practitionerRoutes);
+app.use("/practitioner", authenticateRequest, routes.practitionerRoutes);
 
 //Error handler
 app.use((err, req, res, next) => {
@@ -31,6 +32,7 @@ app.use((err, req, res, next) => {
   }
 
   //Server Error
+  logger.error(err.stack);
   res.status(500).send({ msg: "Server Error Occured!", stack: err.stack });
 });
 
