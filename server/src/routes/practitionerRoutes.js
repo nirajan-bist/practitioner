@@ -3,7 +3,7 @@ import { Router } from "express";
 const app = Router();
 
 import * as Practitioner from "../modals/practitioner";
-import { validateCreatePractitioner } from "../validators/practitioner";
+import { validateCreatePractitioner, validateUpdatePractitioner } from "../validators/practitioner";
 
 app.get("/", async (req, res) => {
   const data = await Practitioner.fetchAll();
@@ -22,7 +22,7 @@ app.get("/:id", async (req, res) => {
   res.send({ text: `${id} fetched`, data });
 });
 
-app.put("/:id", async (req, res) => {
+app.put("/:id", validateUpdatePractitioner, async (req, res) => {
   const data = req.body;
   const { id } = req.params;
   const updated = await Practitioner.updateById(id, data);

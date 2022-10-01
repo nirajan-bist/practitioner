@@ -9,7 +9,7 @@ const qb = () => db(TABLE_NAME);
  * @returns {Promise} [object]
  */
 export function fetchAll() {
-  return qb().select("*");
+  return qb().select("*").orderBy("id");
 }
 /**
  * Fetches a practitioner by id.
