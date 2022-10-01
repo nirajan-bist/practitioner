@@ -20,16 +20,16 @@ app.get("/:id", async (req, res) => {
   const data = await Practitioner.fetchById(id);
   res.send({ text: `${id} fetched`, data });
 });
+
 app.put("/:id", async (req, res) => {
   const data = req.body;
   const { id } = req.params;
   const updated = await Practitioner.updateById(id, data);
   res.send({ text: `${id} updated`, updated });
 });
+
 app.delete("/:id", async (req, res) => {
-  const data = req.body;
   const { id } = req.params;
-  console.log(id);
   const deleted = await Practitioner.deleteById(id);
   res.send({ text: `${id} deleted`, deleted });
 });

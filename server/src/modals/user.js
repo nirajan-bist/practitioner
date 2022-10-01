@@ -4,19 +4,30 @@ const TABLE_NAME = "user";
 
 const qb = () => db(TABLE_NAME);
 
-export function fetchById(id) {
-  return qb().select("*").where("id", id);
+/**
+ * Fetch a user by id.
+ * @param {Number} id
+ * @returns {Object} object[]
+ */
+export async function fetchById(id) {
+  const [result] = await qb().select("*").where("id", id);
+  return result;
 }
-export function fetchByEmailAndPassword(email, password) {
-  return qb()
-    .select("id", "email", "created_at")
-    .where("email", email)
-    .where("password", password)
-    .then(([result]) => result);
+/**
+ * Fetch a user by email.
+ * @param {String} email
+ * @returns {Object} object
+ */
+export async function fetchByEmail(email) {
+  const [result] = await qb().select("id", "email", "password").where("email", email);
+  return result;
 }
-
-export function insert(data) {
-  return qb()
-    .insert(data, ["id", "email"])
-    .then(([result]) => result);
+/**
+ * Inserts a new user.
+ * @param {Object} data
+ * @returns {Object} object
+ */
+export async function insert(data) {
+  const [result] = await qb().insert(data, ["id", "email", "password"]);
+  return result;
 }
