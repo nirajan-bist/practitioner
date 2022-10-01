@@ -3,14 +3,15 @@ import { Router } from "express";
 const app = Router();
 
 import * as Practitioner from "../modals/practitioner";
+import { validateCreatePractitioner } from "../validators/practitioner";
 
 app.get("/", async (req, res) => {
   const data = await Practitioner.fetchAll();
   res.send(data);
 });
 
-app.post("/", async (req, res) => {
-  const data = req.body;
+app.post("/", validateCreatePractitioner, async (req, res) => {
+  const data = { ...req.body, createdBy: req.user.id };
   const inserted = await Practitioner.insert(data);
   res.send(inserted);
 });
