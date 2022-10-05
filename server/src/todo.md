@@ -1,4 +1,3 @@
-- TODO: ICU Specialist column add
 - TODO: Error middleware
 - TODO: React inital setup
 - TODO: React router setup
