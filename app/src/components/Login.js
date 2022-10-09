@@ -1,11 +1,15 @@
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+
+import useDocumentTitle from "hooks/useDocumentTitle";
 
 import "./login.css";
 
 const { Group, Label, Control } = Form;
 
 export default function Login() {
+  useDocumentTitle("Login");
+
   return (
     <div id="login-form" className="">
       <Form className="form-signin">

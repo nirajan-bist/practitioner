@@ -1,10 +1,14 @@
 import React from "react";
 import { Outlet, Link } from "react-router-dom";
 
+import useDocumentTitle from "hooks/useDocumentTitle";
+
 const App = (props) => {
+  useDocumentTitle("Home");
+
   return (
     <div>
-      <div>Hello World!</div>
+      <div>Welcome to the Practitioner Management Portal</div>
 
       <nav>
         <ul>
