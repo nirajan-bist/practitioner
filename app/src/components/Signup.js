@@ -10,6 +10,7 @@ import { Formik, Field, Form } from "formik";
 const { Group, Label, Control, Text } = BsForm;
 
 const initialValues = {
+  fullname: "",
   email: "",
   password: "",
 };
@@ -23,16 +24,33 @@ export default function Login() {
 
   const FormikComponent = (props) => {
     return (
-      <Form className="form-signin">
+      <Form>
         <div className="logo m-auto mb-3" />
-        <h1 className="h3 mb-3 font-weight-normal text-center">
-          Please sign in
-        </h1>
+        <h1 className="h3 mb-3 font-weight-normal text-center">Sign Up</h1>
+
+        <Field name="fullname">
+          {({ field }) => (
+            <Group className="mt-4">
+              <Label htmlFor="fullname" className="required">
+                Full Name
+              </Label>
+              <Control
+                {...field}
+                type="text"
+                id="fullname"
+                className="form-control"
+                placeholder="Full Name"
+                required
+                autoFocus
+              />
+            </Group>
+          )}
+        </Field>
 
         <Field name="email">
           {({ field }) => (
-            <Group className="mt-3">
-              <Label htmlFor="inputEmail" visuallyHidden>
+            <Group className="my-3">
+              <Label htmlFor="inputEmail" className="required">
                 Email address
               </Label>
               <Control
@@ -48,8 +66,8 @@ export default function Login() {
         </Field>
         <Field name="password">
           {({ field }) => (
-            <Group className="mb-3">
-              <Label htmlFor="inputPassword" visuallyHidden>
+            <Group className="my-3">
+              <Label htmlFor="inputPassword" className="required">
                 Password
               </Label>
               <Control
@@ -63,11 +81,11 @@ export default function Login() {
           )}
         </Field>
         <Button type="submit" variant="primary" size="lg" className="w-100">
-          Log in
+          Sign Up
         </Button>
 
         <Text>
-          Don't have an account? <Link to="/signup">Create new</Link>
+          Already have an account? <Link to="/login">Login</Link>
         </Text>
         <p className="mt-5 mb-3 text-muted text-center">&copy; 2021-2022</p>
       </Form>

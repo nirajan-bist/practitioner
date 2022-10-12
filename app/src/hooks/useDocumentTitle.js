@@ -7,7 +7,7 @@ const useDocumentTitle = (title, defaultTitle = "Practitioner Management") => {
     return () => {
       window.document.title = defaultTitle;
     };
-  }, [title]);
+  }, [title, defaultTitle]);
 };
 
 export default useDocumentTitle;
