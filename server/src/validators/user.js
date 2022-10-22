@@ -7,7 +7,9 @@ const signInSchema = Joi.object({
   password: Joi.string().min(3).max(30).label("Password").required(),
 });
 
-const signUpSchema = signInSchema;
+const signUpSchema = signInSchema.keys({
+  fullname: Joi.string().max(100).label("Full Name").required(),
+});
 
 const refreshTokenSchema = Joi.object({
   refreshToken: Joi.string().required(),

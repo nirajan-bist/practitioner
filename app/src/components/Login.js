@@ -7,6 +7,9 @@ import "./login.css";
 import { Link } from "react-router-dom";
 import { Formik, Field, Form } from "formik";
 
+import { logIn } from "services/auth";
+import { saveTokens } from "services/token";
+
 const { Group, Label, Control, Text } = BsForm;
 
 const initialValues = {
@@ -17,8 +20,9 @@ const initialValues = {
 export default function Login() {
   useDocumentTitle("Login");
 
-  const handleSubmit = (values) => {
-    console.log(values);
+  const handleSubmit = async (values) => {
+    const tokens = await logIn({ ...values });
+    saveTokens(tokens);
   };
 
   const FormikComponent = (props) => {
