@@ -6,7 +6,7 @@ import { authenticate, createNewUser, refreshTokens } from "../controllers/auth"
 
 import { validateSignIn, validateSignUp, validateRefreshToken } from "../validators/user";
 
-app.post("/signin", validateSignIn, authenticate);
+app.post("/login", validateSignIn, authenticate);
 
 app.post("/signup", validateSignUp, createNewUser);
 
