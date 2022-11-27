@@ -1,35 +1,37 @@
 import Button from "react-bootstrap/Button";
 import BsForm from "react-bootstrap/Form";
-
-import useDocumentTitle from "hooks/useDocumentTitle";
-
-import { Link } from "react-router-dom";
 import { Formik, Field, Form } from "formik";
+import { addPractitioner, selectPractitionerById, updatePractitioner } from "reducers/practitioner";
+import { useDispatch, useSelector } from "react-redux";
 
-import { signUp } from "services/auth";
-import { saveTokens } from "services/token";
-
-const { Group, Label, Control, Text } = BsForm;
+const { Group, Label, Control } = BsForm;
 
 const initialValues = {
   fullname: "",
   email: "",
-  password: "",
+  contact: "",
 };
 
-export default function Signup() {
-  useDocumentTitle("Signup");
+export default function PractionerForm(props) {
+  const dispatch = useDispatch();
+  const {practitionerId, mode, closeModal} = props;
+  const practitioner = useSelector(state=> selectPractitionerById(state, practitionerId))
 
   const handleSubmit = async (values) => {
-    const tokens = await signUp({ ...values });
-    saveTokens(tokens);
+    if(mode=='edit'){
+      dispatch(updatePractitioner(values));
+      closeModal();
+      return;
+    }
+    dispatch(addPractitioner(values));
+    closeModal();
   };
 
   const FormikComponent = (props) => {
     return (
       <Form>
         <div className="logo m-auto mb-3" />
-        <h1 className="h3 mb-3 font-weight-normal text-center">Sign Up</h1>
+        <h1 className="h3 mb-3 font-weight-normal text-center">Details</h1>
 
         <Field name="fullname">
           {({ field }) => (
@@ -67,37 +69,32 @@ export default function Signup() {
             </Group>
           )}
         </Field>
-        <Field name="password">
+        <Field name="contact">
           {({ field }) => (
             <Group className="my-3">
-              <Label htmlFor="inputPassword" className="required">
-                Password
+              <Label htmlFor="inputContact" className="required">
+                Contact
               </Label>
               <Control
                 {...field}
-                type="password"
-                id="inputPassword"
-                placeholder="Password"
+                type="text"
+                id="inputContact"
+                placeholder="Contact"
                 required
               />
             </Group>
           )}
         </Field>
         <Button type="submit" variant="primary" size="lg" className="w-100">
-          Sign Up
+         Submit
         </Button>
-
-        <Text>
-          Already have an account? <Link to="/login">Login</Link>
-        </Text>
-        <p className="mt-5 mb-3 text-muted text-center">&copy; 2021-2022</p>
       </Form>
     );
   };
 
   return (
-    <div id="login-form" className="">
-      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+    <div className="new-practitioner-form">
+      <Formik initialValues={mode=='edit' ? practitioner: initialValues} onSubmit={handleSubmit}>
         {FormikComponent}
       </Formik>
     </div>

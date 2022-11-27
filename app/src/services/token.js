@@ -11,6 +11,13 @@ export function removeTokens() {
   cookies.del(REFRESH_TOKEN);
 }
 
+export  function getTokens() {
+  return {
+    accessToken: cookies.get(ACCESS_TOKEN),
+    refreshToken: cookies.get(REFRESH_TOKEN)
+  };
+}
+
 const tokenService = {
   saveTokens,
   removeTokens,

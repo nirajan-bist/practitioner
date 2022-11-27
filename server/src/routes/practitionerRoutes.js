@@ -7,32 +7,32 @@ import { validateCreatePractitioner, validateUpdatePractitioner } from "../valid
 
 app.get("/", async (req, res) => {
   const data = await Practitioner.fetchAll();
-  res.send(data);
+  res.json({ data });
 });
 
 app.post("/", validateCreatePractitioner, async (req, res) => {
   const data = { ...req.body, createdBy: req.user.id };
-  const inserted = await Practitioner.insert(data);
-  res.send(inserted);
+  const [inserted] = await Practitioner.insert(data);
+  res.json({ data: inserted });
 });
 
 app.get("/:id", async (req, res) => {
   const { id } = req.params;
   const data = await Practitioner.fetchById(id);
-  res.send({ text: `${id} fetched`, data });
+  res.json({ data });
 });
 
 app.put("/:id", validateUpdatePractitioner, async (req, res) => {
   const data = req.body;
   const { id } = req.params;
-  const updated = await Practitioner.updateById(id, data);
-  res.send({ text: `${id} updated`, updated });
+  const [updated] = await Practitioner.updateById(id, data);
+  res.json({ data: updated });
 });
 
 app.delete("/:id", async (req, res) => {
   const { id } = req.params;
-  const deleted = await Practitioner.deleteById(id);
-  res.send({ text: `${id} deleted`, deleted });
+  const [deleted] = await Practitioner.deleteById(id);
+  res.json({ data: deleted });
 });
 
 export default app;

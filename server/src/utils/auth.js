@@ -26,7 +26,30 @@ export function compareHash(hashA, hashB) {
  */
 export function getSignedTokens(data) {
   return {
-    accessToken: jwt.sign(data, TOKEN_SECRETS[ACCESS_TOKEN], { expiresIn: "1d" }),
-    refreshToken: jwt.sign(data, TOKEN_SECRETS[REFRESH_TOKEN], { expiresIn: "7d" }),
+    accessToken: jwt.sign(data, TOKEN_SECRETS[ACCESS_TOKEN], { expiresIn: "10s" }),
+    refreshToken: jwt.sign(data, TOKEN_SECRETS[REFRESH_TOKEN], { expiresIn: "3d" }),
+  };
+}
+/**
+ * Formats the token payload
+ * @param {Object} data Claims for the token.
+ */
+export function formatTokenData(data) {
+  const { id, email } = data;
+  // Extract only the claims from the data
+  return {
+    id,
+    email,
+  };
+}
+/**
+ * Formats the token response
+ * @param {Object} data Claims for the token.
+ */
+export function formatTokenResponse(data) {
+  const user = formatTokenData(data);
+  return {
+    user,
+    tokens: getSignedTokens(user),
   };
 }

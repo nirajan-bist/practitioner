@@ -6,9 +6,8 @@ import useDocumentTitle from "hooks/useDocumentTitle";
 import "./login.css";
 import { Link } from "react-router-dom";
 import { Formik, Field, Form } from "formik";
-
-import { logIn } from "services/auth";
-import { saveTokens } from "services/token";
+import { useDispatch } from "react-redux";
+import { logIn } from "reducers/auth";
 
 const { Group, Label, Control, Text } = BsForm;
 
@@ -20,9 +19,9 @@ const initialValues = {
 export default function Login() {
   useDocumentTitle("Login");
 
+  const dispatch = useDispatch()
   const handleSubmit = async (values) => {
-    const tokens = await logIn({ ...values });
-    saveTokens(tokens);
+    dispatch(logIn(values))
   };
 
   const FormikComponent = (props) => {

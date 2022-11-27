@@ -38,6 +38,9 @@ app.use((err, req, res, next) => {
     return res.status(400).send("User with this email exists already!");
   }
 
+  if (err.message === "Invalid Token") {
+    return res.status(401).json({ error: { code: 401, message: "Token is Invalid!" } });
+  }
   if (err.status === 404) {
     //Route not found
     logger.info(`${req.path} path is not available!`);
