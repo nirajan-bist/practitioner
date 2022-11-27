@@ -2,14 +2,14 @@ import jwt from "jsonwebtoken";
 
 import * as User from "../modals/user";
 
-import { getHashedPassword, compareHash, getSignedTokens } from "../utils/auth";
+import { getHashedPassword, compareHash, formatTokenResponse } from "../utils/auth";
 
 import { TOKEN_SECRETS, REFRESH_TOKEN } from "../constants";
 
 /**
  * Sign in an existing user.
  * @param {Object} data email and password
- * @returns {Object} {accessToken, refreshToken}
+ * @returns {Object} {user, tokens}
  */
 export async function signIn(data) {
   const { email, password } = data;
@@ -23,7 +23,7 @@ export async function signIn(data) {
   const pass = compareHash(password, hashedPassword);
 
   if (pass) {
-    return getSignedTokens({ id, email });
+    return formatTokenResponse(user);
   }
 
   throw new Error("Invalid Email or Password!");
@@ -31,30 +31,29 @@ export async function signIn(data) {
 /**
  * Creates new user user.
  * @param {Object} data email and password
- * @returns {Object} {accessToken, refreshToken}
+ * @returns {Object} {user, tokens}
  */
 export async function signUp(data) {
   const { email, password } = data;
 
   const hashedPassword = getHashedPassword(password);
 
-  const { id } = await User.insert({ email, password: hashedPassword });
+  const user = await User.insert({ email, password: hashedPassword });
 
-  return getSignedTokens({ id, email });
+  return formatTokenResponse(user);
 }
 /**
  * Generates new access token and refresh token from existing refresh token.
  * @param {Object} data Refresh token
- * @returns {Object} {accessToken, refreshToken}
+ * @returns {Object} {user, tokens}
  */
 export async function generateNewTokens(data) {
   try {
     const { refreshToken } = data;
 
-    const decoded = jwt.verify(refreshToken, TOKEN_SECRETS[REFRESH_TOKEN]);
-    const { id, email } = decoded;
+    const user = jwt.verify(refreshToken, TOKEN_SECRETS[REFRESH_TOKEN]);
 
-    return getSignedTokens({ id, email });
+    return formatTokenResponse(user);
   } catch (err) {
     throw new Error("Invalid Refresh Token");
   }

@@ -1,5 +1,7 @@
 import practitioner from "./practitioner"
+import auth from "./auth"
 
 export default {
-  practitioner
+  auth,
+  practitioner,
 }

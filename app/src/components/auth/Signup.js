@@ -1,13 +1,13 @@
 import Button from "react-bootstrap/Button";
 import BsForm from "react-bootstrap/Form";
 
+import { useDispatch } from "react-redux";
 import useDocumentTitle from "hooks/useDocumentTitle";
 
 import { Link } from "react-router-dom";
 import { Formik, Field, Form } from "formik";
 
-import { signUp } from "services/auth";
-import { saveTokens } from "services/token";
+import { signUp } from "reducers/auth";
 
 const { Group, Label, Control, Text } = BsForm;
 
@@ -20,9 +20,9 @@ const initialValues = {
 export default function Signup() {
   useDocumentTitle("Signup");
 
+  const dispatch = useDispatch()
   const handleSubmit = async (values) => {
-    const tokens = await signUp({ ...values });
-    saveTokens(tokens);
+    dispatch(signUp(values))
   };
 
   const FormikComponent = (props) => {

@@ -6,6 +6,7 @@ import Login from "components/auth/Login";
 import Signup from "components/auth/Signup";
 import Dashboard from "components/dashboard/Dashboard";
 import Practitioner from "components/dashboard/Practitioner";
+import AuthRoute from "hoc/AuthenticatedRoute";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/practitioner",
-        element: <Practitioner />,
+        element: <AuthRoute><Practitioner /></AuthRoute>,
       },
       {
         path: "/home",

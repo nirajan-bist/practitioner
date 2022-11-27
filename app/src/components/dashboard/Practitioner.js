@@ -11,13 +11,11 @@ import PractitionerRow from "./PractitionerRow";
 import PractionerForm from "./PractitionerForm";
 import "./practitioner.css";
 
-
 export default function Practitioner() {
   useDocumentTitle("Practitioner");
 
   const dispatch = useDispatch();
   const practitioners = useSelector(selectPractitionerIds);
-  const loading = useSelector((state) => state.practitioner.loading);
   const [mode, setMode] = React.useState("");
   const [editData, setEditData] = React.useState(null);
 
@@ -35,8 +33,8 @@ export default function Practitioner() {
   };
 
   useEffect(() => {
-    if (!loading) dispatch(fetchPractitioners());
-  }, [loading]);
+    dispatch(fetchPractitioners());
+  }, []);
 
   return (
     <div className="practitioner-page">
