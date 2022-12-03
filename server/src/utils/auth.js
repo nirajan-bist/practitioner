@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import { ACCESS_TOKEN, REFRESH_TOKEN, TOKEN_SECRETS } from "../constants";
+import { ACCESS_TOKEN, REFRESH_TOKEN, TOKEN_SECRETS, ACCESS_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY } from "../constants";
 /**
  * Returns salted hash from given plain-text password.
  * @param {String} rawPassword
@@ -26,8 +26,8 @@ export function compareHash(hashA, hashB) {
  */
 export function getSignedTokens(data) {
   return {
-    accessToken: jwt.sign(data, TOKEN_SECRETS[ACCESS_TOKEN], { expiresIn: "10s" }),
-    refreshToken: jwt.sign(data, TOKEN_SECRETS[REFRESH_TOKEN], { expiresIn: "3d" }),
+    accessToken: jwt.sign(data, TOKEN_SECRETS[ACCESS_TOKEN], { expiresIn: ACCESS_TOKEN_EXPIRY }),
+    refreshToken: jwt.sign(data, TOKEN_SECRETS[REFRESH_TOKEN], { expiresIn: REFRESH_TOKEN_EXPIRY }),
   };
 }
 /**
@@ -52,4 +52,13 @@ export function formatTokenResponse(data) {
     user,
     tokens: getSignedTokens(user),
   };
+}
+
+/**
+ * Formats the token response
+ * @param {Object} data Claims for the token.
+ */
+export function getNewAccessToken(data) {
+  const user = formatTokenData(data);
+  return jwt.sign(user, TOKEN_SECRETS[ACCESS_TOKEN], { expiresIn: ACCESS_TOKEN_EXPIRY });
 }

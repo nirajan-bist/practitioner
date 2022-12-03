@@ -1,7 +1,11 @@
 import Button from "react-bootstrap/Button";
 import BsForm from "react-bootstrap/Form";
 import { Formik, Field, Form } from "formik";
-import { addPractitioner, selectPractitionerById, updatePractitioner } from "reducers/practitioner";
+import {
+  addPractitioner,
+  selectPractitionerById,
+  updatePractitioner,
+} from "reducers/practitioner";
 import { useDispatch, useSelector } from "react-redux";
 
 const { Group, Label, Control } = BsForm;
@@ -14,11 +18,13 @@ const initialValues = {
 
 export default function PractionerForm(props) {
   const dispatch = useDispatch();
-  const {practitionerId, mode, closeModal} = props;
-  const practitioner = useSelector(state=> selectPractitionerById(state, practitionerId))
+  const { practitionerId, mode, closeModal } = props;
+  const practitioner = useSelector((state) =>
+    selectPractitionerById(state, practitionerId)
+  );
 
   const handleSubmit = async (values) => {
-    if(mode=='edit'){
+    if (mode === "edit") {
       dispatch(updatePractitioner(values));
       closeModal();
       return;
@@ -86,7 +92,7 @@ export default function PractionerForm(props) {
           )}
         </Field>
         <Button type="submit" variant="primary" size="lg" className="w-100">
-         Submit
+          Submit
         </Button>
       </Form>
     );
@@ -94,7 +100,10 @@ export default function PractionerForm(props) {
 
   return (
     <div className="new-practitioner-form">
-      <Formik initialValues={mode=='edit' ? practitioner: initialValues} onSubmit={handleSubmit}>
+      <Formik
+        initialValues={mode === "edit" ? practitioner : initialValues}
+        onSubmit={handleSubmit}
+      >
         {FormikComponent}
       </Formik>
     </div>

@@ -7,7 +7,10 @@ import useDocumentTitle from "hooks/useDocumentTitle";
 import { Link } from "react-router-dom";
 import { Formik, Field, Form } from "formik";
 
-import { signUp } from "reducers/auth";
+import {  saveTokens } from "services/token";
+import { signUp } from "services/auth";
+import { submitWrapper } from "utils/form";
+import { setLoggedInUser } from "reducers/auth";
 
 const { Group, Label, Control, Text } = BsForm;
 
@@ -20,9 +23,14 @@ const initialValues = {
 export default function Signup() {
   useDocumentTitle("Signup");
 
-  const dispatch = useDispatch()
-  const handleSubmit = async (values) => {
-    dispatch(signUp(values))
+  const dispatch = useDispatch();
+
+  const handleSubmit = (values) => {
+    submitWrapper(async () => {
+      const { user, tokens } = await signUp(values);
+      saveTokens(tokens);
+      dispatch(setLoggedInUser(user));
+    });
   };
 
   const FormikComponent = (props) => {

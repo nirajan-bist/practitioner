@@ -13,6 +13,11 @@ export const TOKEN_SECRETS = {
   [ACCESS_TOKEN]: process.env.ACCESS_TOKEN_SECRET,
   [REFRESH_TOKEN]: process.env.REFRESH_TOKEN_SECRET,
 };
+
+export const ACCESS_TOKEN_EXPIRY = "20s";
+export const REFRESH_TOKEN_EXPIRY = "7d";
+
+//============================================================
 /**
  * ERROR CONSTANTS
  */

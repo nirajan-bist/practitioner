@@ -1,22 +1,20 @@
 import axios from "axios";
-
 import config from "config";
-
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "constants";
-
-import cookies from "./cookies";
 import * as authService from "services/auth";
 import * as tokenService from "services/token";
+import { logOut } from "./user";
 
-const http = axios.create({
+export const axiosConfig = {
   baseURL: config.baseURI,
   headers: {
     "Content-Type": "application/json",
   },
-});
+};
+
+const http = axios.create(axiosConfig);
 
 const requestInterceptor = async (request) => {
-  const accessToken = cookies.get(ACCESS_TOKEN);
+  const accessToken = tokenService.getAccessToken();
 
   if (accessToken) {
     request.headers["Authorization"] = `Bearer ${accessToken}`;
@@ -25,115 +23,74 @@ const requestInterceptor = async (request) => {
   return request;
 };
 
-let unauthorizedRequestQueue = [];
+let requestCbQueue = [];
 let isRefreshingAccessToken = false;
 
 export async function responseInterceptor(err) {
   const originalRequest = err.config;
-  if (!originalRequest) {
-    return Promise.reject(err);
-  }
-  const code = err.response && err.response.status;
-  const path = originalRequest.url;
-  if (code === 401 && originalRequest.url === config.endpoints.auth.refresh) {
-    clearLocalAuth();
-
-    return Promise.reject(err);
-  }
-
-  if ( path !== config.endpoints.auth.refresh) {
+  const statusCode = err.response?.status;
+  
+  if (statusCode === 401 && originalRequest.url !== config.endpoints.auth.refresh) {
     try {
-      const {refreshToken} = tokenService.getTokens();
+      const refreshToken = tokenService.getRefreshToken();
       if (!refreshToken) {
-        return clearLocalAuth();
+        return onRefreshFailed();
       }
-      if (!isRefreshingAccessToken) {
-        isRefreshingAccessToken = true;
-        const { accessToken, refreshToken: newRefreshToken } = await authService.renewToken(refreshToken);
-        tokenService.saveTokens({accessToken, refreshToken: newRefreshToken});
-        const newRequest = changeAccessToken(originalRequest, accessToken);
-
-        callRequestsFromUnauthorizedQueue(accessToken);
-
-        clearUnauthorizedRequestQueue();
-
-        isRefreshingAccessToken = false;
-        return http.request(newRequest);
+      if (isRefreshingAccessToken) {
+        return subscribeNewAccessToken(originalRequest);      
       }
 
-      const retryRequest = new Promise((resolve) => {
-        subscribeToAccessTokenRefresh(function (refreshedAccessToken) {
-          const newRequest = changeAccessToken(originalRequest, refreshedAccessToken);
+      isRefreshingAccessToken = true;
+      const accessToken = await authService.renewToken(refreshToken);
+      tokenService.saveAccessToken(accessToken);
+      const newRequest = subscribeNewAccessToken(originalRequest, true);
+      callRequestCallbacks();
+      requestCbQueue=[];
+      isRefreshingAccessToken = false;
 
-          resolve(http.request(newRequest));
-        });
-      });
+      return newRequest;
 
-      return retryRequest;
     } catch (error) {
-      if (code !== 401) {
-        return;
-      }
-
-      if (path !== config.endpoints.auth.refresh) {
-        return;
-      }
-
-      clearLocalAuth();
+      onRefreshFailed();
     }
   }
 
   return Promise.reject(err);
 }
 
-/**
- * Changes access token of the provided request.
- *
- * @param {Object} originalRequest
- * @param {Object} newToken
- */
-function changeAccessToken(originalRequest, newToken) {
-  return {
+function callRequestCallbacks(newAccessToken){
+   requestCbQueue.map(cb => cb(newAccessToken));
+}
+
+function changeRequestWithNewToken(originalRequest, newAccessToken) {
+  const newRequestConfig = {
     ...originalRequest,
     headers: {
       ...originalRequest.headers,
-      Authorization: `Bearer ${newToken}`,
+      Authorization: `Bearer ${newAccessToken}`,
     },
   };
+  return newRequestConfig;  
 }
 
-/**
- * Subscribe retry request to access token refresh.
- * Add request to unauthorized request queue.
- *
- * @param {Function} callback
- */
-function subscribeToAccessTokenRefresh(callback) {
-  unauthorizedRequestQueue.push(callback);
+function subscribeNewAccessToken(originalRequest, isInitialRequest) {
+  return new Promise((resolve)=>{
+    const callback = newAccessToken => {
+      const newRequest = changeRequestWithNewToken(originalRequest, newAccessToken);
+      resolve(http.request(newRequest));
+    };
+
+    if(isInitialRequest) {
+      return requestCbQueue.unshift(callback);
+    }
+
+    requestCbQueue.push(callback);
+  })
 }
 
-/**
- * Calls pending requests from unauthorized request queue.
- *
- * @param {String} refreshedAccessToken
- */
-function callRequestsFromUnauthorizedQueue(refreshedAccessToken) {
-  unauthorizedRequestQueue.map((cb) => cb(refreshedAccessToken));
-}
-
-/**
- * Clears unauthorized request queue.
- */
-function clearUnauthorizedRequestQueue() {
-  unauthorizedRequestQueue = [];
-}
-
-/**
- * Clear tokens and redirect to login page.
- */
-function clearLocalAuth() {
-  tokenService.removeTokens();
-  window.location.href = config.endpoints.auth.login;
+function onRefreshFailed() {
+  requestCbQueue = [];
+  logOut();
 }
 
 http.interceptors.request.use(requestInterceptor);

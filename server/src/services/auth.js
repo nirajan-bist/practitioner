@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 import * as User from "../modals/user";
 
-import { getHashedPassword, compareHash, formatTokenResponse } from "../utils/auth";
+import { getHashedPassword, compareHash, formatTokenResponse, getNewAccessToken } from "../utils/auth";
 
 import { TOKEN_SECRETS, REFRESH_TOKEN } from "../constants";
 
@@ -47,13 +47,13 @@ export async function signUp(data) {
  * @param {Object} data Refresh token
  * @returns {Object} {user, tokens}
  */
-export async function generateNewTokens(data) {
+export async function generateNewAccessToken(data) {
   try {
     const { refreshToken } = data;
 
     const user = jwt.verify(refreshToken, TOKEN_SECRETS[REFRESH_TOKEN]);
 
-    return formatTokenResponse(user);
+    return getNewAccessToken(user);
   } catch (err) {
     throw new Error("Invalid Refresh Token");
   }

@@ -1,4 +1,4 @@
-import { signIn, signUp, generateNewTokens } from "../services/auth";
+import { signIn, signUp, generateNewAccessToken } from "../services/auth";
 
 export async function authenticate(req, res, next) {
   try {
@@ -22,8 +22,7 @@ export async function createNewUser(req, res, next) {
 
 export async function refreshTokens(req, res, next) {
   try {
-    const data = await generateNewTokens(req.body);
-
+    const data = await generateNewAccessToken(req.body);
     return res.status(200).json(data);
   } catch (err) {
     next(err);

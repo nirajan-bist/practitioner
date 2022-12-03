@@ -6,6 +6,7 @@ import morgan from "morgan";
 import cors from "cors";
 import routes from "./routes";
 import { authenticateRequest } from "./middlewares/auth";
+import errorHandler from "./middlewares/errorHandler";
 
 import createLogger, { writeStream } from "./utils/logger";
 const logger = createLogger("index");
@@ -31,25 +32,9 @@ app.use((req, res, next) => {
     message: "Not Found",
   });
 });
-//Error handler
-app.use((err, req, res, next) => {
-  //Postgres unique constriant error
-  if (err.code === "23505") {
-    return res.status(400).send("User with this email exists already!");
-  }
 
-  if (err.message === "Invalid Token") {
-    return res.status(401).json({ error: { code: 401, message: "Token is Invalid!" } });
-  }
-  if (err.status === 404) {
-    //Route not found
-    logger.info(`${req.path} path is not available!`);
-    return res.status(404).json({ error: { code: 404, message: "Route is not implemented yet!" } });
-  }
-  //Server Error
-  logger.error(err.stack);
-  res.status(500).send({ message: "Server Error Occured!", stack: err.stack });
-});
+//Error handler middleware
+app.use(errorHandler);
 
 // Listen to the port
 app.listen(PORT, () => {
