@@ -8,7 +8,7 @@ export default function Dashboard() {
   return (
     <div>
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
-  <Link className="navbar-brand" to={'/home'}>PMS App</Link>
+    <Link className="navbar-brand" to={'/practitioner'}>PMS App</Link>
  
     <ul className="navbar-nav">
       <li className="nav-item active">
