@@ -2,6 +2,7 @@ import axios from "axios";
 import config from "config";
 import * as authService from "services/auth";
 import * as tokenService from "services/token";
+import { logOut } from "./user";
 
 export const axiosConfig = {
   baseURL: config.baseURI,
@@ -89,8 +90,7 @@ function subscribeNewAccessToken(originalRequest, isInitialRequest) {
 
 function onRefreshFailed() {
   requestCbQueue = [];
-  tokenService.removeTokens();
-  window.location.href = config.endpoints.auth.login;
+  logOut();
 }
 
 http.interceptors.request.use(requestInterceptor);
