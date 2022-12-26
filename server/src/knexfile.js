@@ -1,5 +1,10 @@
 require("dotenv").config({ path: `${__dirname}/../.env` });
 
+const { setTypeParser, builtins } = require("pg").types;
+
+// Resloves problem of getting timestamp instead of date in date fields.
+setTypeParser(builtins.DATE, (val) => val);
+
 // Basic db connection object
 const connection = {
   host: process.env.DB_HOST,
