@@ -10,6 +10,7 @@ import { interpolate } from "utils/string";
 const initialState = {
   loading: false,
   entities: {},
+  ids:[]
 };
 
 // Thunk functions
@@ -42,10 +43,15 @@ export const deletePractitioner = createAsyncThunk(
 export const updatePractitioner = createAsyncThunk(
   "practitioner/updatePractitioner",
   async (payload) => {
-    const practitioner = {
+    const practitioner = 
+    {
       email: payload.email,
       fullname: payload.fullname,
       contact: payload.contact,
+      dob: payload.dob,
+      startTime: payload.startTime,
+      endTime: payload.endTime,
+      workingDays: payload.workingDays,
     }
     const { data: response } = await http.put(interpolate("/practitioner/:id:", { id: payload.id}), practitioner);
     return response.data;
@@ -63,10 +69,13 @@ const practitionerSlice = createSlice({
       .addCase(fetchPractitioners.fulfilled, (state, action) => {
         state.loading = false;
         const newEntities = {};
+        const newIds = [];
         action.payload.forEach((practitioner) => {
           newEntities[practitioner.id] = practitioner;
+          newIds.push(practitioner.id);
         });
         state.entities = newEntities;
+        state.ids = newIds;
       })
       .addCase(fetchPractitioners.rejected, (state) => {
         state.loading = false;
@@ -91,15 +100,15 @@ const practitionerSlice = createSlice({
 
 export const selectPractitionerEntities = (state) =>
   state.practitioner.entities;
+export const selectPractitionerIds = (state) =>
+  state.practitioner.ids;
 
 export const selectPractitioners = createSelector(
+  selectPractitionerIds,
   selectPractitionerEntities,
-  (practitioners) => Object.values(practitioners)
+  (ids, practitioners) => ids.map((id)=>practitioners[id])
 );
-export const selectPractitionerIds = createSelector(
-  selectPractitioners,
-  (practitioners) => practitioners.map((practitioner) => practitioner.id)
-);
+
 export const selectPractitionerById = (state, practitionerId) =>
   selectPractitionerEntities(state)[practitionerId];
 

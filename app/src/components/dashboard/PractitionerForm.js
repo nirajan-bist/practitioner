@@ -3,6 +3,7 @@ import BsForm from "react-bootstrap/Form";
 import { Formik, Field, Form } from "formik";
 import {
   addPractitioner,
+  fetchPractitioners,
   selectPractitionerById,
   updatePractitioner,
 } from "reducers/practitioner";
@@ -14,6 +15,7 @@ const initialValues = {
   fullname: "",
   email: "",
   contact: "",
+  dob: null,  
 };
 
 export default function PractionerForm(props) {
@@ -30,6 +32,7 @@ export default function PractionerForm(props) {
       return;
     }
     dispatch(addPractitioner(values));
+    dispatch(fetchPractitioners);
     closeModal();
   };
 
@@ -75,6 +78,22 @@ export default function PractionerForm(props) {
             </Group>
           )}
         </Field>
+        <Field name="dob">
+          {({ field }) => (
+            <Group className="my-3">
+              <Label htmlFor="inputDateOfBirth" className="required">
+                Date of Birth
+              </Label>
+              <Control
+                {...field}
+                type="Date"
+                id="inputDateOfBirth"
+                placeholder="Date of Birth"
+                required
+              />
+            </Group>
+          )}
+        </Field>
         <Field name="contact">
           {({ field }) => (
             <Group className="my-3">
@@ -86,6 +105,54 @@ export default function PractionerForm(props) {
                 type="text"
                 id="inputContact"
                 placeholder="Contact"
+                required
+              />
+            </Group>
+          )}
+        </Field>
+        <Field name="workingDays">
+          {({ field }) => (
+            <Group className="my-3">
+              <Label htmlFor="inputWorkingDays" className="required">
+                Working Days
+              </Label>
+              <Control
+                {...field}
+                type="text"
+                id="inputWorkingDays"
+                placeholder="Type index of weekdays (For Sun -> 1, Sat -> 7) separated by commas"
+                required
+              />
+            </Group>
+          )}
+        </Field>
+        <Field name="startTime">
+          {({ field }) => (
+            <Group className="my-3">
+              <Label htmlFor="inputStartTime" className="required">
+                Start Time
+              </Label>
+              <Control
+                {...field}
+                type="time"
+                id="inputStartTime"
+                placeholder="Start Time"
+                required
+              />
+            </Group>
+          )}
+        </Field>
+        <Field name="endTime">
+          {({ field }) => (
+            <Group className="my-3">
+              <Label htmlFor="inputEndTime" className="required">
+                End time
+              </Label>
+              <Control
+                {...field}
+                type="time"
+                id="inputEndTime"
+                placeholder="End Time"
                 required
               />
             </Group>

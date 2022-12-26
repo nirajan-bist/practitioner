@@ -14,7 +14,7 @@ export const TOKEN_SECRETS = {
   [REFRESH_TOKEN]: process.env.REFRESH_TOKEN_SECRET,
 };
 
-export const ACCESS_TOKEN_EXPIRY = "20s";
+export const ACCESS_TOKEN_EXPIRY = "1hr";
 export const REFRESH_TOKEN_EXPIRY = "7d";
 
 //============================================================
