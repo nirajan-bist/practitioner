@@ -2,7 +2,7 @@ import Joi from "joi";
 
 import validate from "../utils/validate";
 
-const timeRegEx = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+const timeRegEx = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9]$)?/;
 
 const createPractitionerSchema = Joi.object({
   email: Joi.string().max(100).email().label("Email").required(),
