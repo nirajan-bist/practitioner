@@ -1,3 +1,4 @@
+import React, {useState} from "react";
 import Button from "react-bootstrap/Button";
 import BsForm from "react-bootstrap/Form";
 import { Formik, Field, Form } from "formik";
@@ -9,17 +10,45 @@ import {
 } from "reducers/practitioner";
 import { useDispatch, useSelector } from "react-redux";
 
+import Resizer from "react-image-file-resizer";
+
+const resizeFile = (file) =>
+  new Promise((resolve) => {
+    Resizer.imageFileResizer(
+      file,
+      300,300,
+      "JPEG",
+      100, 0,
+      (uri) => resolve(uri),
+      "base64"
+    );
+  });
+
+
 const { Group, Label, Control } = BsForm;
 
 const initialValues = {
   fullname: "",
   email: "",
   contact: "",
-  dob: null,  
+  dob: '',  
 };
 
 export default function PractionerForm(props) {
   const dispatch = useDispatch();
+  
+  const [img, setImg] = useState('');
+  const handleFileRead = async (event, onChange) => {
+  const file = event.target.files[0]
+  if(!file) {
+    setImg('');
+    return;
+  }
+  const img64= await resizeFile(file)
+  setImg(img64);
+  onChange(event.target.files[0].name)
+  
+}
   const { practitionerId, mode, closeModal } = props;
   const practitioner = useSelector((state) =>
     selectPractitionerById(state, practitionerId)
@@ -27,11 +56,11 @@ export default function PractionerForm(props) {
 
   const handleSubmit = async (values) => {
     if (mode === "edit") {
-      dispatch(updatePractitioner(values));
+      dispatch(updatePractitioner({...values, imageUrl: img}));
       closeModal();
       return;
     }
-    dispatch(addPractitioner(values));
+    dispatch(addPractitioner({...values, imageUrl: img}));
     dispatch(fetchPractitioners);
     closeModal();
   };
@@ -39,7 +68,11 @@ export default function PractionerForm(props) {
   const FormikComponent = (props) => {
     return (
       <Form>
-        <div className="logo m-auto mb-3" />
+        
+        {props.values.imageUrl ? 
+        <div className="text-center"><img  className="profile-image" src={props.values.imageUrl}/></div>:
+        <div className="logo m-auto mb-3" /> }
+
         <h1 className="h3 mb-3 font-weight-normal text-center">Details</h1>
 
         <Field name="fullname">
@@ -155,6 +188,25 @@ export default function PractionerForm(props) {
                 placeholder="End Time"
                 required
               />
+            </Group>
+          )}
+        </Field>
+        <Field name="image">
+          {({ field }) => (
+            <Group className="my-3">
+              <Label htmlFor="imageURL" className="required">
+                Photo
+              </Label>
+              <Control
+                {...field}
+                type="file"
+                accept=".jpeg, .jpg, .png"
+                id="imageURL"
+                onChange={(e)=>handleFileRead(e, field.onChange)}
+                placeholder="Profile image"
+                required
+              />
+              <div className="container mt-2 text-center">{img && <img src={img} className="selected-image" alt="profile-img"/>}</div>
             </Group>
           )}
         </Field>

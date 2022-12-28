@@ -1,0 +1,17 @@
+.selected-image{
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  padding: 5px;
+  border: 2px solid;
+  border-radius: 5px;
+}
+
+.profile-image{
+    width: 1.25em;
+    height: 1.25em;
+    border-radius: .25em;
+    font-size: 6rem;
+    object-fit: cover;
+    text-align: center;
+}

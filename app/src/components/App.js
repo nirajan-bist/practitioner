@@ -4,6 +4,7 @@ import router from "./Router";
 import { useDispatch } from "react-redux";
 import { parseToken } from "services/token";
 import { setLoggedInUser } from "reducers/auth";
+import "assets/style/index.css";
 
 const App = (props) => {
   const dispatch = useDispatch();

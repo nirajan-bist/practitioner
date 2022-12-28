@@ -52,6 +52,7 @@ export const updatePractitioner = createAsyncThunk(
       startTime: payload.startTime,
       endTime: payload.endTime,
       workingDays: payload.workingDays,
+      imageUrl: payload.imageUrl,
     }
     const { data: response } = await http.put(interpolate("/practitioner/:id:", { id: payload.id}), practitioner);
     return response.data;
@@ -94,6 +95,7 @@ const practitionerSlice = createSlice({
       .addCase(deletePractitioner.fulfilled, (state, action) => {
         const practitioner = action.payload;
         delete state.entities[practitioner.id];
+        state.ids = state.ids.filter(id=>id!=practitioner.id);
       });
   },
 });
