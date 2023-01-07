@@ -15,6 +15,7 @@ const logger = new winston.createLogger({
       level: "debug",
     }),
   ],
+  silent: process.env.NODE_ENV === "test",
 });
 
 const createLogger = (context) => {
