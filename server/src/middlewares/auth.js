@@ -28,7 +28,7 @@ export async function authenticateRequest(req, res, next) {
       return next(new Error("No Authorization Token"));
     }
 
-    const [tokenTag = "", token = ""] = authorization.split(" ").filter(Boolean);
+    const [tokenTag, token = ""] = authorization.split(" ").filter(Boolean);
 
     if (tokenTag === "Bearer") {
       if (!token) {
@@ -38,6 +38,8 @@ export async function authenticateRequest(req, res, next) {
       const user = getPayloadFromToken(token);
       req.user = user;
       next();
+    } else {
+      next(new Error("No Authorization Token"));
     }
   } catch (error) {
     next(error);
