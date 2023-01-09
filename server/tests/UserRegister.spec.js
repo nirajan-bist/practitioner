@@ -27,6 +27,22 @@ describe("Login test", () => {
     expect(response.body.error.message).toBe(result);
   });
 
+  it("returns 400 when no such email does exist", async () => {
+    const response = await request(app).post("/login").send({
+      email: "unregisterd@gmail.com",
+      password: "psswd",
+    });
+    expect(response.status).toBe(400);
+  });
+
+  it("returns 400 when email and password mismatch", async () => {
+    const response = await request(app).post("/login").send({
+      email: "test@gmail.com",
+      password: "fake",
+    });
+    expect(response.status).toBe(400);
+  });
+
   it("returns 200 OK when user successfully logs in", async () => {
     const response = await request(app).post("/login").send({
       email: "test@gmail.com",
@@ -67,26 +83,49 @@ describe("Sign up test", () => {
     expect(mockCreateNewUser).toBeCalled();
   });
 
+  it("returns 400 when user signs up with already existing email", async () => {
+    let user = {
+      fullname: "Testable",
+      email: "test@gmail.com",
+      password: "test",
+    };
+
+    const response = await request(app).post("/signup").send(user);
+    expect(response.status).toBe(400);
+    expect(response.body.error.message).toBe("User with this email exists already!");
+  });
+
   afterEach(() => {
     jest.restoreAllMocks();
   });
 });
 
 describe("Refresh Token", () => {
+  let token = "";
+  beforeAll(async () => {
+    const response = await request(app).post("/login").send({
+      email: "test@gmail.com",
+      password: "test",
+    });
+    token = response.body.tokens.refreshToken;
+  });
+
   it("returns 400 when refreshToken field is null", async () => {
     const response = await request(app).post("/refresh");
     expect(response.status).toBe(400);
     expect(response.body.error.message).toBe('"refreshToken" is required');
   });
 
-  it("returns 200 OK when user successfully signs up", async () => {
-    const mockCreateNewUser = jest
-      .spyOn(authService, "generateNewAccessToken")
-      .mockImplementation(() => Promise.resolve());
+  it("returns 401 when refreshToken expired or is invalid", async () => {
+    const response = await request(app).post("/refresh").send({ refreshToken: "invalid.refresh.token" });
+    expect(response.status).toBe(401);
+    expect(response.body.error.message).toBe("Invalid Refresh Token");
+  });
 
-    const response = await request(app).post("/refresh").send({ refreshToken: "SIDFYYksdfsyx.asdf.88666" });
+  it("returns 200 OK when gets new token successfully", async () => {
+    const response = await request(app).post("/refresh").send({ refreshToken: token });
     expect(response.status).toBe(200);
-    expect(mockCreateNewUser).toBeCalled();
+    expect(response.body).toBeDefined();
   });
 
   afterEach(() => {

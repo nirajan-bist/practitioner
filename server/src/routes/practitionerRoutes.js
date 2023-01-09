@@ -1,4 +1,5 @@
 import { Router } from "express";
+import ValidationError from "../errors/ValidationError";
 
 const app = Router();
 
@@ -29,10 +30,14 @@ app.put("/:id", validateUpdatePractitioner, async (req, res) => {
   res.json({ data: updated });
 });
 
-app.delete("/:id", async (req, res) => {
+app.delete("/:id", async (req, res, next) => {
   const { id } = req.params;
-  const [deleted] = await Practitioner.deleteById(id);
-  res.json({ data: deleted });
+  try {
+    const [deleted] = await Practitioner.deleteById(id);
+    res.json({ data: deleted });
+  } catch (err) {
+    next(new ValidationError(`Couldn't delete the practitioner ${id}`));
+  }
 });
 
 export default app;

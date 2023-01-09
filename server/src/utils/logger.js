@@ -1,6 +1,6 @@
 import winston, { format } from "winston";
 
-const logFormat = (params) => {
+export const logFormat = (params) => {
   const { level, message, metadata } = params;
   const { timestamp, context } = metadata || {};
 

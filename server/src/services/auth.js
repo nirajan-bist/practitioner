@@ -5,7 +5,8 @@ import * as User from "../modals/user";
 import { getHashedPassword, compareHash, formatTokenResponse, getNewAccessToken } from "../utils/auth";
 
 import { TOKEN_SECRETS, REFRESH_TOKEN } from "../constants";
-
+import ValidationError from "../errors/ValidationError";
+import TokenError from "../errors/TokenError";
 /**
  * Sign in an existing user.
  * @param {Object} data email and password
@@ -16,7 +17,7 @@ export async function signIn(data) {
   const user = await User.fetchByEmail(email);
 
   if (!user) {
-    throw new Error("Invalid Email or Password!");
+    throw new ValidationError("Invalid Email or Password!");
   }
 
   const { id, password: hashedPassword } = user;
@@ -26,7 +27,7 @@ export async function signIn(data) {
     return formatTokenResponse(user);
   }
 
-  throw new Error("Invalid Email or Password!");
+  throw new ValidationError("Invalid Email or Password!");
 }
 /**
  * Creates new user user.
@@ -38,9 +39,12 @@ export async function signUp(data) {
 
   const hashedPassword = getHashedPassword(password);
 
-  const user = await User.insert({ email, password: hashedPassword });
-
-  return formatTokenResponse(user);
+  try {
+    const user = await User.insert({ email, password: hashedPassword });
+    return formatTokenResponse(user);
+  } catch {
+    throw new ValidationError("User with this email exists already!");
+  }
 }
 /**
  * Generates new access token and refresh token from existing refresh token.
@@ -55,6 +59,6 @@ export async function generateNewAccessToken(data) {
 
     return getNewAccessToken(user);
   } catch (err) {
-    throw new Error("Invalid Refresh Token");
+    throw new TokenError("Invalid Refresh Token");
   }
 }
