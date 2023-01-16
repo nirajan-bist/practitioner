@@ -6,7 +6,8 @@ import Dashboard from "components/dashboard/Dashboard";
 import Practitioner from "components/dashboard/Practitioner";
 import AuthRoute from "hoc/AuthenticatedRoute";
 import Auth from "components/auth";
-const router = createBrowserRouter([
+
+export const routes = [
   {
     path: "/",
     element: <Dashboard />,
@@ -26,6 +27,8 @@ const router = createBrowserRouter([
       },
     ],
   },
-]);
+];
+
+const router = createBrowserRouter(routes);
 
 export default router;
