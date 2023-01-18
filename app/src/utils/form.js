@@ -6,7 +6,7 @@ export async function submitWrapper(handleSubmit, onError) {
   }catch(err){
     handleError(err)
     if(onError){
-      await onError();
+      await onError(err);
     }
   }
 }

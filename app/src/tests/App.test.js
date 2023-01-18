@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import store from "store";
 
-it("App test", () => {
+it("Navbar should render", () => {
   render(
     <Provider store={store}>
       <App />
@@ -14,7 +14,7 @@ it("App test", () => {
   expect(screen.getByRole("navigation")).toBeDefined();
 });
 
-it("Router test", async () => {
+it("Login Page should render", async () => {
   const customRouter = createMemoryRouter(routes, {
     initialEntries: ["/login"],
   });
@@ -23,14 +23,13 @@ it("Router test", async () => {
     <Provider store={store}>
       <RouterProvider router={customRouter} />
     </Provider>
-
   );
 
   await waitFor(() => screen.getByRole("button"));
   expect(screen.getByRole("button").textContent).toBe("Log in");
 });
 
-it("Signup test", async () => {
+it("Signup Page should render", async () => {
   const customRouter = createMemoryRouter(routes, {
     initialEntries: ["/signup"],
   });
@@ -39,9 +38,9 @@ it("Signup test", async () => {
     <Provider store={store}>
       <RouterProvider router={customRouter} />
     </Provider>
-
   );
 
   await waitFor(() => screen.getByRole("button"));
-  expect(screen.getByRole("button").textContent).toBe("Log in");
+  expect(screen.getByRole("button").textContent).toBe("Sign Up");
 });
+
