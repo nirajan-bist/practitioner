@@ -7,6 +7,7 @@ const endpoints = {
     login: "/login",
     signup: "/signup",
     refresh: "/refresh",
+    logout: "/logout",
   },
 };
 

@@ -11,12 +11,14 @@ export const fetchAll = async () => {
   }
 };
 
-export const addOne = async (payload) => {
+export const addOne = async ({payload, onError, onSuccess}) => {
   try {
     const { data: response } = await http.post("/practitioner", payload);
+    onSuccess(response.data);
     return response.data;
   } catch (error) {
     handleError(error);
+    if(onError) onError(error);
   }
 };
 
@@ -30,7 +32,7 @@ export const deleteOne = async (payload) => {
     handleError(error);
   }
 };
-export const updateOne = async (payload) => {
+export const updateOne = async ({payload, onError, onSuccess}) => {
   try {
     const practitioner = {
       email: payload.email,
@@ -48,8 +50,10 @@ export const updateOne = async (payload) => {
       interpolate("/practitioner/:id:", { id: payload.id }),
       practitioner
     );
+    onSuccess(response.data);
     return response.data;
   } catch (error) {
     handleError(error);
+    if(onError) onError(error);
   }
 };

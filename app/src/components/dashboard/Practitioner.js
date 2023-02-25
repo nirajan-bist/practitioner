@@ -34,6 +34,12 @@ export default function Practitioner() {
     setMode(mode);
   };
 
+  const onFormSubmit = ()=>{
+    console.log(form.current)
+    // form.current?.handleSubmit()
+    form.current?.submitForm()
+  }
+
   useEffect(() => {
     dispatch(fetchPractitioners());
   }, [dispatch]);
@@ -44,7 +50,7 @@ export default function Practitioner() {
         buttonTitle="Add New Practitioner"
         isOpen={mode === "add"}
         onChange={(state) => onModalChange(state, "add")}
-        onSubmit = {()=>form.current?.submitForm()}
+        onSubmit = {onFormSubmit}
       >
         <PractionerForm closeModal={onModalChange} ref={form}/>
       </Modal>
@@ -53,7 +59,7 @@ export default function Practitioner() {
         hideTriggerButton
         isOpen={mode === "edit"}
         onChange={(state) => onModalChange(state, "edit")}
-        onSubmit = {()=>form.current?.submitForm()}
+        onSubmit = {onFormSubmit}
       >
         <PractionerForm
           practitionerId={editData}

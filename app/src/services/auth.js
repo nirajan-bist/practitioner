@@ -2,6 +2,7 @@ import axios from "axios";
 import config from "config";
 import { handleError } from "utils/error";
 import { axiosConfig } from "utils/http";
+import { getRefreshToken } from "./token";
 
 export const signUp = async (payload) => {
   try {
@@ -21,6 +22,18 @@ export const logIn = async (payload) => {
     const { data } = await axios.post(
       config.endpoints.auth.login,
       payload,
+      axiosConfig
+    );
+    return data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+export const logOut = async () => {
+  try {
+    const { data } = await axios.post(
+      config.endpoints.auth.logout,
+      {refreshToken: getRefreshToken()},
       axiosConfig
     );
     return data;
