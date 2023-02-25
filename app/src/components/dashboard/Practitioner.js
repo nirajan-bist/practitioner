@@ -9,7 +9,7 @@ import {
 import { useEffect } from "react";
 import PractitionerRow from "./PractitionerRow";
 import PractionerForm from "./PractitionerForm";
-import "./practitioner.css";
+import "./practitioner.scss";
 
 export default function Practitioner() {
   useDocumentTitle("Practitioner");
