@@ -9,7 +9,8 @@ import {
 import { useEffect } from "react";
 import PractitionerRow from "./PractitionerRow";
 import PractionerForm from "./PractitionerForm";
-import "./practitioner.css";
+import "./practitioner.scss";
+import { useRef } from "react";
 
 export default function Practitioner() {
   useDocumentTitle("Practitioner");
@@ -18,6 +19,7 @@ export default function Practitioner() {
   const practitioners = useSelector(selectPractitionerIds);
   const [mode, setMode] = React.useState("");
   const [editData, setEditData] = React.useState(null);
+  const form = useRef();
 
   const handleEdit = (practitionerId) => {
     setMode("edit");
@@ -32,9 +34,15 @@ export default function Practitioner() {
     setMode(mode);
   };
 
+  const onFormSubmit = ()=>{
+    console.log(form.current)
+    // form.current?.handleSubmit()
+    form.current?.submitForm()
+  }
+
   useEffect(() => {
     dispatch(fetchPractitioners());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="practitioner-page">
@@ -42,19 +50,22 @@ export default function Practitioner() {
         buttonTitle="Add New Practitioner"
         isOpen={mode === "add"}
         onChange={(state) => onModalChange(state, "add")}
+        onSubmit = {onFormSubmit}
       >
-        <PractionerForm closeModal={onModalChange} />
+        <PractionerForm closeModal={onModalChange} ref={form}/>
       </Modal>
 
       <Modal
         hideTriggerButton
         isOpen={mode === "edit"}
         onChange={(state) => onModalChange(state, "edit")}
+        onSubmit = {onFormSubmit}
       >
         <PractionerForm
           practitionerId={editData}
           mode={mode}
           closeModal={onModalChange}
+          ref={form}
         />
       </Modal>
 

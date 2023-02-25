@@ -15,3 +15,21 @@
     object-fit: cover;
     text-align: center;
 }
+
+.main-container{
+  margin: 10px;
+  padding: 10px;
+}
+
+.main-content{
+  padding: 10px;
+}
+
+.hover {
+  cursor: pointer;
+}
+
+.modal-body{
+  max-height: calc(100vh - 180px);
+  overflow: auto;
+}

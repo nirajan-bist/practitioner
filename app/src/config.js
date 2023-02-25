@@ -7,12 +7,14 @@ const endpoints = {
     login: "/login",
     signup: "/signup",
     refresh: "/refresh",
+    logout: "/logout",
   },
 };
 
 const config = {
   ...baseConfig,
   endpoints,
+  env: process.env.REACT_APP_ENV,
 };
 
 export default config;

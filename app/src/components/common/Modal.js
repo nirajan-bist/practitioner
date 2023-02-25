@@ -19,6 +19,7 @@ function CenteredModal(props) {
         {props.children}
       </Modal.Body>
       <Modal.Footer>
+        { props.onSubmit && <Button onClick={props.onSubmit}>Submit</Button>}
         <Button onClick={props.onHide}>Close</Button>
       </Modal.Footer>
     </Modal>
@@ -47,6 +48,7 @@ function App(props) {
       <CenteredModal
         show={isOpen? isOpen: innerIsOpen}
         onHide={() => handleModalState(false)}
+        onSubmit = {props.onSubmit}
       >
         {props.children}
       </CenteredModal>

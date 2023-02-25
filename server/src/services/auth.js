@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 
 import * as User from "../modals/user";
+import * as Token from "../modals/tokens";
 
 import { getHashedPassword, compareHash, formatTokenResponse, getNewAccessToken } from "../utils/auth";
 
@@ -24,7 +25,20 @@ export async function signIn(data) {
   const pass = compareHash(password, hashedPassword);
 
   if (pass) {
-    return formatTokenResponse(user);
+    const tokenResponse = formatTokenResponse(user);
+    await Token.insert({
+      userId: user.id,
+      isAccessToken: true,
+      isActive: true,
+      token: tokenResponse.tokens.accessToken,
+    });
+    await Token.insert({
+      userId: user.id,
+      isAccessToken: false,
+      isActive: true,
+      token: tokenResponse.tokens.refreshToken,
+    });
+    return tokenResponse;
   }
 
   throw new ValidationError("Invalid Email or Password!");
@@ -41,7 +55,20 @@ export async function signUp(data) {
 
   try {
     const user = await User.insert({ email, password: hashedPassword });
-    return formatTokenResponse(user);
+    const tokenResponse = formatTokenResponse(user);
+    await Token.insert({
+      userId: user.id,
+      isAccessToken: true,
+      isActive: true,
+      token: tokenResponse.tokens.accessToken,
+    });
+    await Token.insert({
+      userId: user.id,
+      isAccessToken: false,
+      isActive: true,
+      token: tokenResponse.tokens.refreshToken,
+    });
+    return tokenResponse;
   } catch {
     throw new ValidationError("User with this email exists already!");
   }
@@ -57,8 +84,28 @@ export async function generateNewAccessToken(data) {
 
     const user = jwt.verify(refreshToken, TOKEN_SECRETS[REFRESH_TOKEN]);
 
-    return getNewAccessToken(user);
+    const token = await Token.fetchByUserActiveToken(user.id, refreshToken);
+    if (!token) throw "";
+
+    const newAccessToken = getNewAccessToken(user);
+    await Token.insert({ userId: user.id, isAccessToken: true, isActive: true, token: newAccessToken });
+
+    return newAccessToken;
   } catch (err) {
     throw new TokenError("Invalid Refresh Token");
+  }
+}
+/**
+ * Generates new access token and refresh token from existing refresh token.
+ * @param {Object} data Refresh token
+ * @returns {Object} {user, tokens}
+ */
+export async function isValidToken(userId, token) {
+  try {
+    const isValid = await Token.fetchByUserActiveToken(userId, token);
+    if (!isValid) return false;
+    return true;
+  } catch (err) {
+    throw new TokenError("Token Expired!");
   }
 }

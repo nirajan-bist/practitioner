@@ -1,7 +1,15 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import { ACCESS_TOKEN, REFRESH_TOKEN, TOKEN_SECRETS, ACCESS_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY } from "../constants";
+import {
+  ACCESS_TOKEN,
+  REFRESH_TOKEN,
+  TOKEN_SECRETS,
+  TOKEN_TYPES,
+  ACCESS_TOKEN_EXPIRY,
+  REFRESH_TOKEN_EXPIRY,
+} from "../constants";
+import TokenError from "../errors/TokenError";
 /**
  * Returns salted hash from given plain-text password.
  * @param {String} rawPassword
@@ -61,4 +69,20 @@ export function formatTokenResponse(data) {
 export function getNewAccessToken(data) {
   const user = formatTokenData(data);
   return jwt.sign(user, TOKEN_SECRETS[ACCESS_TOKEN], { expiresIn: ACCESS_TOKEN_EXPIRY });
+}
+
+/**
+ * Gets payload/claims from the given token.
+ * @param {String} token
+ * @param {String} tokenType
+ * @returns
+ */
+export function getPayloadFromToken(token, tokenType = TOKEN_TYPES.ACCESS_TOKEN) {
+  try {
+    var decoded = jwt.verify(token, TOKEN_SECRETS[tokenType]);
+
+    return decoded;
+  } catch (err) {
+    throw new TokenError("Invalid Token");
+  }
 }
