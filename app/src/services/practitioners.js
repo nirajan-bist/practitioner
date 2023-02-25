@@ -40,8 +40,10 @@ export const updateOne = async (payload) => {
       startTime: payload.startTime,
       endTime: payload.endTime,
       workingDays: payload.workingDays,
-      imageUrl: payload.imageUrl,
     };
+
+    if(payload.imageUrl) practitioner.imageUrl = payload.imageUrl;
+
     const { data: response } = await http.put(
       interpolate("/practitioner/:id:", { id: payload.id }),
       practitioner

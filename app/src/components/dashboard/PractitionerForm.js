@@ -70,7 +70,7 @@ function PractionerForm(props, ref) {
       <Form>
         
         {props.values.imageUrl ? 
-        <div className="text-center"><img  className="profile-image" src={props.values.imageUrl}/></div>:
+        <div className="text-center"><img  className="profile-image" src={props.values.imageUrl} alt="profile"/></div>:
         <div className="logo m-auto mb-3" /> }
 
         <h1 className="h3 mb-3 font-weight-normal text-center">Details</h1>

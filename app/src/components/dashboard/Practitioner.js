@@ -36,7 +36,7 @@ export default function Practitioner() {
 
   useEffect(() => {
     dispatch(fetchPractitioners());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="practitioner-page">

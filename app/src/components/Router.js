@@ -4,8 +4,8 @@ import Login from "components/auth/Login";
 import Signup from "components/auth/Signup";
 import Dashboard from "components/dashboard/Dashboard";
 import Practitioner from "components/dashboard/Practitioner";
-import AuthRoute from "hoc/AuthenticatedRoute";
-import Auth from "components/auth";
+import AuthenticatedRoute from "hoc/AuthenticatedRoute";
+import UnAuthenticatedRoute from "components/auth";
 
 export const routes = [
   {
@@ -15,19 +15,35 @@ export const routes = [
     children: [
       {
         path: "/practitioner",
-        element: <AuthRoute><Practitioner /></AuthRoute>,
+        element: (
+          <AuthenticatedRoute>
+            <Practitioner />
+          </AuthenticatedRoute>
+        ),
       },
       {
         path: "/login",
-        element: <Auth><Login /></Auth>,
+        element: (
+          <UnAuthenticatedRoute>
+            <Login />
+          </UnAuthenticatedRoute>
+        ),
       },
       {
         path: "/signup",
-        element: <Auth><Signup /></Auth>,
+        element: (
+          <UnAuthenticatedRoute>
+            <Signup />
+          </UnAuthenticatedRoute>
+        ),
       },
       {
         path: "/",
-        element: <AuthRoute><Practitioner /></AuthRoute>,
+        element: (
+          <AuthenticatedRoute>
+            <Practitioner />
+          </AuthenticatedRoute>
+        ),
       },
     ],
   },

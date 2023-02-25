@@ -68,7 +68,7 @@ const practitionerSlice = createSlice({
       .addCase(deletePractitioner.fulfilled, (state, action) => {
         const practitioner = action.payload;
         delete state.entities[practitioner.id];
-        state.ids = state.ids.filter(id=>id!=practitioner.id);
+        state.ids = state.ids.filter(id=>id!==practitioner.id);
       });
   },
 });

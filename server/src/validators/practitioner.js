@@ -26,7 +26,7 @@ const updatePractitionerSchema = Joi.object({
   fullname: Joi.string().label("Full Name"),
   contact: Joi.string().label("Contact"),
   dob: Joi.date().label("Date of Birth"),
-  imageUrl: Joi.string().label("Image URL").allow(""),
+  imageUrl: Joi.string().label("Image URL").optional(),
   startTime: Joi.string()
     .label("Start TIme")
     .pattern(timeRegEx)

@@ -13,6 +13,7 @@ const endpoints = {
 const config = {
   ...baseConfig,
   endpoints,
+  env: process.env.REACT_APP_ENV,
 };
 
 export default config;
