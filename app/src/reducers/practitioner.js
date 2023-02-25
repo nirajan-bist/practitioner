@@ -3,9 +3,7 @@ import {
   createAsyncThunk,
   createSelector,
 } from "@reduxjs/toolkit";
-
-import http from "utils/http";
-import { interpolate } from "utils/string";
+import { addOne, deleteOne, fetchAll, updateOne } from "services/practitioners";
 
 const initialState = {
   loading: false,
@@ -16,47 +14,22 @@ const initialState = {
 // Thunk functions
 export const fetchPractitioners = createAsyncThunk(
   "practitioner/fetchPractitioners",
-  async () => {
-    const { data: response } = await http.get("/practitioner");
-    return response.data;
-  }
+  fetchAll
 );
 
 export const addPractitioner = createAsyncThunk(
   "practitioner/addPractitioner",
-  async (payload) => {
-    const { data: response }  = await http.post("/practitioner", payload);
-    return response.data;
-  }
+  addOne
 );
 
 export const deletePractitioner = createAsyncThunk(
   "practitioner/deletePractitioner",
-  async (payload) => {
-    const { data: response }  = await http.delete(
-      interpolate("/practitioner/:id:", { id: payload })
-    );
-    return response.data;
-  }
+  deleteOne
 );
 
 export const updatePractitioner = createAsyncThunk(
   "practitioner/updatePractitioner",
-  async (payload) => {
-    const practitioner = 
-    {
-      email: payload.email,
-      fullname: payload.fullname,
-      contact: payload.contact,
-      dob: payload.dob,
-      startTime: payload.startTime,
-      endTime: payload.endTime,
-      workingDays: payload.workingDays,
-      imageUrl: payload.imageUrl,
-    }
-    const { data: response } = await http.put(interpolate("/practitioner/:id:", { id: payload.id}), practitioner);
-    return response.data;
-  }
+  updateOne
 );
 
 const practitionerSlice = createSlice({

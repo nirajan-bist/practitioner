@@ -25,6 +25,10 @@ export const routes = [
         path: "/signup",
         element: <Auth><Signup /></Auth>,
       },
+      {
+        path: "/",
+        element: <AuthRoute><Practitioner /></AuthRoute>,
+      },
     ],
   },
 ];
