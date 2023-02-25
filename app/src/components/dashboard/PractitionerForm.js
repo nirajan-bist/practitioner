@@ -11,6 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 import Resizer from "react-image-file-resizer";
+import { forwardRef } from "react";
 
 const resizeFile = (file) =>
   new Promise((resolve) => {
@@ -34,7 +35,7 @@ const initialValues = {
   dob: '',  
 };
 
-export default function PractionerForm(props) {
+function PractionerForm(props, ref) {
   const dispatch = useDispatch();
   
   const [img, setImg] = useState('');
@@ -194,7 +195,7 @@ export default function PractionerForm(props) {
         <Field name="image">
           {({ field }) => (
             <Group className="my-3">
-              <Label htmlFor="imageURL" className="required">
+              <Label htmlFor="imageURL">
                 Photo
               </Label>
               <Control
@@ -204,15 +205,11 @@ export default function PractionerForm(props) {
                 id="imageURL"
                 onChange={(e)=>handleFileRead(e, field.onChange)}
                 placeholder="Profile image"
-                required
               />
               <div className="container mt-2 text-center">{img && <img src={img} className="selected-image" alt="profile-img"/>}</div>
             </Group>
           )}
         </Field>
-        <Button type="submit" variant="primary" size="lg" className="w-100">
-          Submit
-        </Button>
       </Form>
     );
   };
@@ -222,9 +219,12 @@ export default function PractionerForm(props) {
       <Formik
         initialValues={mode === "edit" ? practitioner : initialValues}
         onSubmit={handleSubmit}
+        innerRef={ref}
       >
         {FormikComponent}
       </Formik>
     </div>
   );
 }
+
+export default forwardRef(PractionerForm);
